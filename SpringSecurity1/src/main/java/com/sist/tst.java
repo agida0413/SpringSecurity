@@ -1,5 +1,7 @@
 package com.sist;
 
-public class tst {
+import org.springframework.security.authentication.ProviderManager;
 
+public class tst {
+ProviderManager
 }
