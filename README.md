@@ -4,3 +4,7 @@
 2)아키텍쳐
 #
 
+
+  2-1) SecurityContextHolder와 Authentication   ( 2024/07/30)
+
+   
