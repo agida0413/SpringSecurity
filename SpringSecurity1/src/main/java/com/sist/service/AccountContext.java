@@ -1,7 +1,9 @@
 package com.sist.service;
 
-import com.sist.dto.Account;
+import org.springframework.stereotype.Component;
 
+import com.sist.dto.Account;
+@Component
 public class AccountContext {
  
 	private static final ThreadLocal<Account> ACCOUNT_THREAD_LOCAL

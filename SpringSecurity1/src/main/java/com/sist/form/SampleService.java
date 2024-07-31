@@ -22,8 +22,13 @@ public class SampleService {
 //	Object credentials=	authentication.getCredentials();
 //		boolean authenticated = authentication.isAuthenticated();//인증된 사용자이냐 ? 
 		
-		Account account=AccountContext.getAccount();
-		System.out.println(account.getUsername());
+//		Account account=AccountContext.getAccount();
+//		System.out.println(account.getUsername());
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDetails= (UserDetails)authentication.getPrincipal();
+		System.out.println(authentication);
+		System.out.println(userDetails.getUsername());
 	}
 }
  
