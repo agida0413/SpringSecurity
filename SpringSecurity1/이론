@@ -117,12 +117,31 @@ AccessDecisionVoter
 WebExpressionVoter: 웹 시큐리티에서 사용하는 기본 구현체, ROLE_Xxxx가 매치하는지 확인.
 RoleHierarchyVoter: 계층형 ROLE 지원. ADMIN > MANAGER > USER
 
-
-
 FilterSecurityInterceptor
 
 AccessDecisionManager를 사용하여 Access Control 또는 예외 처리 하는 필터.
 대부분의 경우 FilterChainProxy에 제일 마지막 필터로 들어있다.
+
+
+WebSecurity의 ignoring()을 사용해서 시큐리티 필터 적용을 제외할 요청을 설정할 수 있다.
+
+
+Async 웹 MVC를 지원하는 필터: WebAsyncManagerIntegrationFilter
+스프링 MVC의 Async 기능(핸들러에서 Callable을 리턴할 수 있는 기능)을 사용할 때에도 SecurityContext를 공유하도록 도와주는 필터.
+PreProcess: SecurityContext를 설정한다.
+Callable: 비록 다른 쓰레드지만 그 안에서는 동일한 SecurityContext를 참조할 수 있다.
+PostProcess: SecurityContext를 정리(clean up)한다.
+
+스프링 시큐리티와 @Async
+@Async를 사용한 서비스를 호출하는 경우
+쓰레드가 다르기 때문에 SecurityContext를 공유받지 못한다.
+
+
+SecurityContext 영속화 필터: SecurityContextPersistenceFilter
+
+SecurityContextRepository를 사용해서 기존의 SecurityContext를 읽어오거나 초기화 한다.
+기본으로 사용하는 전략은 HTTP Session을 사용한다.
+Spring-Session과 연동하여 세션 클러스터를 구현할 수 있다. 
 
 
 
@@ -144,6 +163,73 @@ AccessDeniedException 발생 시
 
 
 
+시큐리티 관련 헤더 추가하는 필터: HeaderWriterFilter
+
+응답 헤더에 시큐리티 관련 헤더를 추가해주는 필터
+XContentTypeOptionsHeaderWriter: 마임 타입 스니핑 방어.
+XXssProtectionHeaderWriter: 브라우저에 내장된 XSS 필터 적용.
+CacheControlHeadersWriter: 캐시 히스토리 취약점 방어.
+HstsHeaderWriter: HTTPS로만 소통하도록 강제.
+XFrameOptionsHeaderWriter: clickjacking 방어.
+
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Content-Language: en-US
+Content-Type: text/html;charset=UTF-8
+Date: Sun, 04 Aug 2019 16:25:10 GMT
+Expires: 0
+Pragma: no-cache
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
 
 
 
+CSRF 어택 방지 필터: CsrfFilter
+CSRF 어택 방지 필터
+인증된 유저의 계정을 사용해 악의적인 변경 요청을 만들어 보내는 기법.
+https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
+https://namu.wiki/w/CSRF
+CORS를 사용할 때 특히 주의 해야 함.
+타 도메인에서 보내오는 요청을 허용하기 때문에...
+https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
+
+로그아웃 처리 필터: LogoutFilter
+여러 LogoutHandler를 사용하여 로그아웃시 필요한 처리를 하며 이후에는 LogoutSuccessHandler를 사용하여 로그아웃 후처리를 한다.
+
+
+
+
+폼 인증 처리 필터: UsernamePasswordAuthenticationFilter
+
+
+
+DefaultLoginPageGeneratingFilter
+기본 로그인 폼 페이지를 생성해주는 필터
+GET /login 요청을 처리하는 필터.
+
+
+요청 캐시 필터: RequestCacheAwareFilter
+현재 요청과 관련 있는 캐시된 요청이 있는지 찾아서 적용하는 필터.
+캐시된 요청이 없다면, 현재 요청 처리
+캐시된 요청이 있다면, 해당 캐시된 요청 처리
+
+시큐리티 관련 서블릿 스팩 구현 필터: SecurityContextHolderAwareRequestFilter
+시큐리티 관련 서블릿 API를 구현해주는 필터
+HttpServletRequest#authenticate(HttpServletResponse)
+HttpServletRequest#login(String, String)
+HttpServletRequest#logout()
+AsyncContext#start(Runnable
+
+
+
+세션 관리 필터: SessionManagementFilter
+
+
+인증/인가 예외 처리 필터: ExceptionTranslationFilter
+
+
+인가 처리 필터: FilterSecurityInterceptor
+
+
+토큰 기반 인증 필터 : RememberMeAuthenticationFilter

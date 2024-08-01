@@ -5,7 +5,12 @@
 	</head>
 <body>
 	<h1 th:text="${message}">user</h1>
-	
+	<form action="/logout" th:action="@{/logout}"  method="post">
+		
+		<p><input type="submit" value="LOGOUT"></p>
+						
+			
+		</form>
 </body>
 
 
