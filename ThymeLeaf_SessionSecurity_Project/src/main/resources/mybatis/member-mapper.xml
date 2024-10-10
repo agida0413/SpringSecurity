@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.yj.mapper.MemberMapper">
+	<select id="login" parameterType="String" resultType="MemberDTO">
+	Select * from session_member where username=#{username}
+	</select>
+	
+	<insert id="join" parameterType="MemberDTO">
+	INSERT INTO session_member (username,password,role)
+	VALUES(#{username},#{password},#{role})
+	
+	</insert>
+	
+ </mapper>

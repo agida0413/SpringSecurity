@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form th:action="@{/api/v1/join}" method="POST">
+ID<input type="text" name="username" id="username">
+PASSWORD<input type="password" name="password" id="password">
+<button type="submit">회원가입</button>
+</form>
+</body>
+</html>
